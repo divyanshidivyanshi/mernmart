@@ -13,8 +13,8 @@ function Login() {
     e.preventDefault();
 
     try {
-      // Routed through Vercel's native prefix structure
-      const { data } = await axios.post("/_/backend/api/auth/login", { 
+      // FIX: Changed from /_/backend/api/... to match your root vercel.json routePrefix
+      const { data } = await axios.post("/api/auth/login", { 
         email, 
         password 
       });
@@ -24,7 +24,7 @@ function Login() {
 
       toast.success("Login Successful");
       setTimeout(() => {
-        window.location.href = "/"; // Force-redirects to home to completely update state configurations
+        window.location.href = "/"; 
       }, 1000);
     } catch (error) {
       toast.error(

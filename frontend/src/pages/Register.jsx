@@ -24,8 +24,8 @@ function Register() {
     e.preventDefault();
 
     try {
-      // Routed through Vercel's native prefix structure
-      await axios.post("/_/backend/api/auth/register", {
+      // FIX: Changed from /_/backend/api/... to match your root vercel.json routePrefix
+      await axios.post("/api/auth/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
