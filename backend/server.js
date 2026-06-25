@@ -18,7 +18,8 @@ const app = express();
 // Dynamically handle CORS for both local development and Vercel production
 const allowedOrigins = [
   "http://localhost:5173", 
-  "http://localhost:3000"
+  "http://localhost:3000",
+  "https://mernmart-live-frontend.vercel.app" // Your production frontend
 ];
 
 app.use(
@@ -49,11 +50,15 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/admin", adminRoutes);
 
-// Local Server Port Listener
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// VERCEL PRODUCTION SAFE LISTENER:
+// Only spin up a persistent port listener when running locally.
+// Vercel manages ports automatically via dynamic on-demand functions.
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
 
 // CRITICAL FOR VERCEL: Export the app instance
 export default app;
