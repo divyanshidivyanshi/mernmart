@@ -5,6 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
   const navigate = useNavigate();
+  
+  // Dynamic backend URL injection for Render / Local development
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -23,15 +27,12 @@ function Register() {
     e.preventDefault();
 
     try {
-      await axios.post(
-        "http://localhost:5000/api/auth/register",
-        {
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          adminSecretKey: formData.adminSecretKey, 
-        }
-      );
+      await axios.post(`${backendUrl}/api/auth/register`, {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        adminSecretKey: formData.adminSecretKey, 
+      });
 
       toast.success("Registration Successful! Redirecting to Login...");
       setTimeout(() => {
@@ -48,14 +49,13 @@ function Register() {
     <div className="min-h-screen bg-black/50 flex items-center justify-center p-4">
       <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
         
-        {/* --- FIXED: Close Button now routes back to Home Page --- */}
+        {/* Functional Close Cross Button */}
         <button 
           onClick={() => navigate("/")}
           className="absolute top-4 right-4 text-2xl text-gray-500 hover:text-black cursor-pointer transition-colors"
         >
           ✕
         </button>
-        {/* -------------------------------------------------------- */}
 
         <h2 className="text-3xl font-bold text-center mb-2">
           Create Account
@@ -70,6 +70,7 @@ function Register() {
             type="text"
             name="name"
             placeholder="Full Name"
+            value={formData.name}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-orange-500"
             required
@@ -79,6 +80,7 @@ function Register() {
             type="email"
             name="email"
             placeholder="Email Address"
+            value={formData.email}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-orange-500"
             required
@@ -88,12 +90,13 @@ function Register() {
             type="password"
             name="password"
             placeholder="Password"
+            value={formData.password}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-orange-500"
             required
           />
 
-          {/* Admin Secret Key Field */}
+          {/* Secure Admin Secret Passcode Input Field */}
           <div className="flex flex-col gap-1">
             <label className="text-xs font-semibold text-gray-500 px-1">
               Admin Secret Key (Leave empty for standard customer accounts)

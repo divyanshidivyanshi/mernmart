@@ -1,10 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom"; // <-- FIXED: Added useNavigate here
+import { Link, useNavigate } from "react-router-dom"; 
 
 function Login() {
-  const navigate = useNavigate(); // <-- FIXED: Initialized navigate
+  const navigate = useNavigate();
+  
+  // Dynamic backend URL injection for Render / Local development
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,17 +16,18 @@ function Login() {
     e.preventDefault();
 
     try {
-      const { data } = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        { email, password }
-      );
+      const { data } = await axios.post(`${backendUrl}/api/auth/login`, { 
+        email, 
+        password 
+      });
 
+      // Secure payload metrics layout management
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data));
 
       toast.success("Login Successful");
       setTimeout(() => {
-        window.location.href = "/"; // Force-redirects to home and forces Navbar to reload
+        window.location.href = "/"; // Force-redirects to home to completely update state configurations
       }, 1000);
     } catch (error) {
       toast.error(
@@ -35,14 +40,13 @@ function Login() {
     <div className="min-h-screen bg-black/50 flex items-center justify-center p-4">
       <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
 
-        {/* --- FIXED: Added Close Cross Button to go Home --- */}
+        {/* Functional Close Cross Button */}
         <button
           onClick={() => navigate("/")}
           className="absolute top-4 right-4 text-2xl text-gray-500 hover:text-black cursor-pointer transition-colors"
         >
           ✕
         </button>
-        {/* -------------------------------------------------- */}
 
         <h2 className="text-3xl font-bold text-center mb-2">
           Welcome Back
@@ -81,10 +85,7 @@ function Login() {
 
         <p className="text-center mt-5 text-gray-600">
           Don't have an account?{" "}
-          <Link
-            to="/register"
-            className="text-orange-500 font-semibold"
-          >
+          <Link to="/register" className="text-orange-500 font-semibold">
             Register
           </Link>
         </p>
