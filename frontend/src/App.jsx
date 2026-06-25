@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios"; // <-- FIXED: Added missing axios import
 
 import Home from "./pages/Home";
 import Register from "./pages/Register";
@@ -18,6 +19,11 @@ import Orders from "./pages/Orders";
 import AdminOrders from "./pages/AdminOrders";
 import AdminProduct from "./pages/AdminProduct";
 import Admin from "./pages/Admin";
+
+// Global Axios Configuration for Vercel Split-Deployment
+// Replace with your EXACT live backend URL from your Vercel Dashboard
+axios.defaults.baseURL = "https://mernmart-live-backend.vercel.app"; 
+axios.defaults.withCredentials = true; // <-- FIXED: Added cross-origin credentials allowance
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);

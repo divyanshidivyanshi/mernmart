@@ -14,14 +14,16 @@ function Login() {
     console.log("Submitting login form for:", email);
 
     try {
-      // Relative path matches our root vercel.json routing rule directly
-      const { data } = await axios.post("/api/auth/login", { 
+      // FORCE AXIOS TO TALK DIRECTLY TO THE LIVE SEPARATE BACKEND DEPLOYMENT
+      const { data } = await axios.post("https://YOUR-LIVE-BACKEND-DOMAIN.vercel.app/api/auth/login", { 
         email, 
         password 
+      }, {
+        withCredentials: true // Ensures session cookies/tokens pass through smoothly
       });
 
       console.log("Response from server received:", data);
-
+      
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data));
 
@@ -30,7 +32,6 @@ function Login() {
         window.location.href = "/"; 
       }, 1000);
     } catch (error) {
-      // Forcefully log out everything to console so you can see it
       console.error("Axios login error context details:", error);
       console.error("Server raw error response payload:", error.response?.data);
       
