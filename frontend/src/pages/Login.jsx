@@ -13,8 +13,8 @@ function Login() {
     e.preventDefault();
 
     try {
-      // Configured for combined Vercel layout via relative API routing
-      const { data } = await axios.post("/api/auth/login", { 
+      // Routed through Vercel's native prefix structure
+      const { data } = await axios.post("/_/backend/api/auth/login", { 
         email, 
         password 
       });

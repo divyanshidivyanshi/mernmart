@@ -24,8 +24,8 @@ function Register() {
     e.preventDefault();
 
     try {
-      // Configured for combined Vercel layout via relative API routing
-      await axios.post("/api/auth/register", {
+      // Routed through Vercel's native prefix structure
+      await axios.post("/_/backend/api/auth/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
