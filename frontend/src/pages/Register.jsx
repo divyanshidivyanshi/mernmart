@@ -5,9 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
   const navigate = useNavigate();
-  
-  // Dynamic backend URL injection for Render / Local development
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
   const [formData, setFormData] = useState({
     name: "",
@@ -27,7 +24,8 @@ function Register() {
     e.preventDefault();
 
     try {
-      await axios.post(`${backendUrl}/api/auth/register`, {
+      // Configured for combined Vercel layout via relative API routing
+      await axios.post("/api/auth/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,

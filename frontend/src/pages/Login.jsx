@@ -5,9 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
-  
-  // Dynamic backend URL injection for Render / Local development
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,12 +13,12 @@ function Login() {
     e.preventDefault();
 
     try {
-      const { data } = await axios.post(`${backendUrl}/api/auth/login`, { 
+      // Configured for combined Vercel layout via relative API routing
+      const { data } = await axios.post("/api/auth/login", { 
         email, 
         password 
       });
 
-      // Secure payload metrics layout management
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data));
 
