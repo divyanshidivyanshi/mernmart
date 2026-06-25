@@ -22,7 +22,7 @@ import Admin from "./pages/Admin";
 
 // Global Axios Configuration for Vercel Split-Deployment
 // Replace with your EXACT live backend URL from your Vercel Dashboard
-axios.defaults.baseURL = "https://mernmart-live-backend.vercel.app"; 
+axios.defaults.baseURL = "https://mernmart-backend.vercel.app"; 
 axios.defaults.withCredentials = true; // <-- FIXED: Added cross-origin credentials allowance
 
 function App() {
