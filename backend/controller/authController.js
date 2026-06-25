@@ -14,7 +14,8 @@ const generateToken = (id) => {
 
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    // 1. Destructure adminSecretKey sent from your frontend form
+    const { name, email, password, adminSecretKey } = req.body;
 
     const userExists = await User.findOne({ email });
 
@@ -26,16 +27,24 @@ export const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // 2. Evaluate secret key to securely establish admin privileges
+    let finalAdminStatus = false;
+    if (adminSecretKey && adminSecretKey === "MernMartSecret2026") {
+      finalAdminStatus = true;
+    }
+
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
+      isAdmin: finalAdminStatus, 
     });
 
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      isAdmin: user.isAdmin, 
       token: generateToken(user._id),
     });
   } catch (error) {
@@ -59,6 +68,7 @@ export const loginUser = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        isAdmin: user.isAdmin, 
         token: generateToken(user._id),
       });
     }

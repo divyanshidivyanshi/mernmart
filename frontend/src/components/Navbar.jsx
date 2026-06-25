@@ -3,7 +3,7 @@ import { assets } from "../assets/assets";
 import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 
-function Navbar({ setShowLogin }) {
+function Navbar() {
   const { getCartCount } = useContext(ShopContext);
 
   const [user, setUser] = useState(null);
@@ -24,7 +24,6 @@ function Navbar({ setShowLogin }) {
     setUser(null);
     setShowMenu(false);
   };
-  
 
   return (
     <nav className="bg-white shadow sticky top-0 z-50">
@@ -83,10 +82,11 @@ function Navbar({ setShowLogin }) {
 
           {/* User Section */}
           {user?.isAdmin && (
-  <Link to="/admin" className="text-red-500">
-    Admin Panel
-  </Link>
-)}
+            <Link to="/admin" className="text-red-500 font-semibold px-1">
+              Admin Panel
+            </Link>
+          )}
+          
           {user ? (
             <div className="relative">
 
@@ -121,19 +121,21 @@ function Navbar({ setShowLogin }) {
             </div>
           ) : (
             <>
-              <button
-                onClick={() => setShowLogin(true)}
-                className="border px-4 py-2 rounded-lg"
+              {/* --- CORRECTED: Links to routing paths instead of modal toggles --- */}
+              <Link
+                to="/login"
+                className="border border-gray-300 px-4 py-2 rounded-lg text-center font-medium hover:bg-gray-50 transition"
               >
                 Login
-              </button>
+              </Link>
 
-              <button
-                onClick={() => setShowLogin(true)}
-                className="bg-orange-500 text-white px-4 py-2 rounded-lg"
+              <Link
+                to="/register"
+                className="bg-orange-500 text-white px-4 py-2 rounded-lg text-center font-medium hover:bg-orange-600 transition"
               >
                 Register
-              </button>
+              </Link>
+              {/* ------------------------------------------------------------------ */}
             </>
           )}
 

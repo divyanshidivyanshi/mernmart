@@ -1,13 +1,15 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; 
 
 function Register() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
+    adminSecretKey: "", 
   });
 
   const handleChange = (e) => {
@@ -27,10 +29,14 @@ function Register() {
           name: formData.name,
           email: formData.email,
           password: formData.password,
+          adminSecretKey: formData.adminSecretKey, 
         }
       );
 
-      toast.success("Registration Successful");
+      toast.success("Registration Successful! Redirecting to Login...");
+      setTimeout(() => {
+        navigate("/login"); 
+      }, 1500);
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Registration Failed"
@@ -40,15 +46,16 @@ function Register() {
 
   return (
     <div className="min-h-screen bg-black/50 flex items-center justify-center p-4">
-
       <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
-
-        {/* Close Button */}
-        <button
-          className="absolute top-4 right-4 text-2xl text-gray-500 hover:text-black"
+        
+        {/* --- FIXED: Close Button now routes back to Home Page --- */}
+        <button 
+          onClick={() => navigate("/")}
+          className="absolute top-4 right-4 text-2xl text-gray-500 hover:text-black cursor-pointer transition-colors"
         >
           ✕
         </button>
+        {/* -------------------------------------------------------- */}
 
         <h2 className="text-3xl font-bold text-center mb-2">
           Create Account
@@ -59,13 +66,13 @@ function Register() {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
           <input
             type="text"
             name="name"
             placeholder="Full Name"
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-orange-500"
+            required
           />
 
           <input
@@ -74,6 +81,7 @@ function Register() {
             placeholder="Email Address"
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-orange-500"
+            required
           />
 
           <input
@@ -82,7 +90,23 @@ function Register() {
             placeholder="Password"
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-orange-500"
+            required
           />
+
+          {/* Admin Secret Key Field */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-semibold text-gray-500 px-1">
+              Admin Secret Key (Leave empty for standard customer accounts)
+            </label>
+            <input
+              type="password"
+              name="adminSecretKey"
+              placeholder="Enter Secret Code to become Admin"
+              value={formData.adminSecretKey}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:border-red-500 bg-gray-50"
+            />
+          </div>
 
           <button
             type="submit"
@@ -90,15 +114,11 @@ function Register() {
           >
             Register
           </button>
-
         </form>
 
         <p className="text-center mt-5 text-gray-600">
           Already have an account?{" "}
-          <Link
-            to="/login"
-            className="text-orange-500 font-semibold"
-          >
+          <Link to="/login" className="text-orange-500 font-semibold">
             Login
           </Link>
         </p>
