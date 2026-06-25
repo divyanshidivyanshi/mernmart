@@ -22,21 +22,26 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Submitting registration form for:", formData.email);
 
     try {
-      // FIX: Changed from /_/backend/api/... to match your root vercel.json routePrefix
-      await axios.post("/api/auth/register", {
+      const { data } = await axios.post("/api/auth/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
         adminSecretKey: formData.adminSecretKey, 
       });
 
+      console.log("Registration response:", data);
+
       toast.success("Registration Successful! Redirecting to Login...");
       setTimeout(() => {
         navigate("/login"); 
       }, 1500);
     } catch (error) {
+      console.error("Axios registration error context details:", error);
+      console.error("Server raw error response payload:", error.response?.data);
+      
       toast.error(
         error.response?.data?.message || "Registration Failed"
       );

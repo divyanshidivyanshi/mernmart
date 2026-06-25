@@ -11,13 +11,16 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Submitting login form for:", email);
 
     try {
-      // FIX: Changed from /_/backend/api/... to match your root vercel.json routePrefix
+      // Relative path matches our root vercel.json routing rule directly
       const { data } = await axios.post("/api/auth/login", { 
         email, 
         password 
       });
+
+      console.log("Response from server received:", data);
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data));
@@ -27,6 +30,10 @@ function Login() {
         window.location.href = "/"; 
       }, 1000);
     } catch (error) {
+      // Forcefully log out everything to console so you can see it
+      console.error("Axios login error context details:", error);
+      console.error("Server raw error response payload:", error.response?.data);
+      
       toast.error(
         error.response?.data?.message || "Login failed"
       );
