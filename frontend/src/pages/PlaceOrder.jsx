@@ -108,13 +108,12 @@ function PlaceOrder() {
         address: formData,
       };
 
-      // 🔥 Create Razorpay order from backend
       const { data } = await axios.post(
-        "http://localhost:5000/api/payment/create",
-        {
-          amount: orderData.amount,
-        }
-      );
+  `${import.meta.env.VITE_BACKEND_URL}/api/payment/create`,
+  {
+    amount: orderData.amount,
+  }
+);
 
       console.log("Razorpay Order:", data);
 

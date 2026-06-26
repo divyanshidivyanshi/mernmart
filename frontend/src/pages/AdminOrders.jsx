@@ -9,7 +9,7 @@ function AdminOrders() {
   const fetchOrders = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/order/all"
+        `${import.meta.env.VITE_BACKEND_URL}/api/order/all`
       );
 
       if (res.data.success) {
@@ -29,7 +29,7 @@ function AdminOrders() {
   const updateStatus = async (orderId, status) => {
     try {
       const res = await axios.put(
-        "http://localhost:5000/api/order/status",
+        `${import.meta.env.VITE_BACKEND_URL}/api/order/status`,
         {
           orderId,
           status,

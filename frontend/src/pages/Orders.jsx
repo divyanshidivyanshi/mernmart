@@ -15,9 +15,11 @@ function Orders() {
         return;
       }
 
-      const res = await axios.get(
-        `http://localhost:5000/api/order/user/${user._id}`
-      );
+     const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+const res = await axios.get(
+  `${BACKEND_URL}/api/order/user/${user._id}`
+);
 
       if (res.data.success) {
         setOrders(res.data.orders);
