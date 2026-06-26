@@ -14,13 +14,16 @@ function Login() {
     console.log("Submitting login form for:", email);
 
     try {
+      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+const { data } = await axios.post(
+  `${BACKEND_URL}/api/auth/login`,
+  { email, password }
+);
       // FORCE AXIOS TO TALK DIRECTLY TO THE LIVE SEPARATE BACKEND DEPLOYMENT
-      const { data } = await axios.post("https://YOUR-LIVE-BACKEND-DOMAIN.vercel.app/api/auth/login", { 
-        email, 
-        password 
-      }, {
+      {
         withCredentials: true // Ensures session cookies/tokens pass through smoothly
-      });
+      };
 
       console.log("Response from server received:", data);
       
