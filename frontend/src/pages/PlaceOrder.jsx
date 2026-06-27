@@ -53,10 +53,10 @@ function PlaceOrder() {
             paymentStatus: "Paid",
           };
 
-          await axios.post(
-            "http://localhost:5000/api/order/place",
-            finalOrder
-          );
+         await axios.post(
+  `${import.meta.env.VITE_BACKEND_URL}/api/order/place`,
+  finalOrder
+);
 
           toast.success("Payment Successful");
 
