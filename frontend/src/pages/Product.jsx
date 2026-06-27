@@ -1,15 +1,18 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useContext, useEffect } from "react";
 import { products } from "../assets/assets";
-import { useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
 
 function Product() {
   const { id } = useParams();
   const { addToCart } = useContext(ShopContext);
 
-  const product = products.find(
-    (item) => item._id === id
-  );
+  // Scroll to top whenever product changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
+  const product = products.find((item) => item._id === id);
 
   if (!product) {
     return (
@@ -54,13 +57,13 @@ function Product() {
           </p>
 
           <p className="text-gray-600 mb-8">
-            Premium quality product with modern design and
-            excellent durability. Perfect choice for daily use.
+            Premium quality product with modern design and excellent durability.
+            Perfect choice for daily use.
           </p>
 
           <button
             onClick={() => addToCart(product._id)}
-            className="bg-orange-500 text-white px-8 py-3 rounded-lg hover:bg-orange-600"
+            className="bg-orange-500 text-white px-8 py-3 rounded-lg hover:bg-orange-600 transition"
           >
             Add To Cart
           </button>
@@ -79,9 +82,10 @@ function Product() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
 
           {relatedProducts.map((item) => (
-            <div
+            <Link
               key={item._id}
-              className="border rounded-xl overflow-hidden shadow hover:shadow-lg"
+              to={`/product/${item._id}`}
+              className="border rounded-xl overflow-hidden shadow hover:shadow-xl hover:-translate-y-1 transition duration-300 block"
             >
               <img
                 src={item.image}
@@ -91,7 +95,7 @@ function Product() {
 
               <div className="p-4">
 
-                <h3 className="font-semibold">
+                <h3 className="font-semibold text-lg">
                   {item.name}
                 </h3>
 
@@ -100,8 +104,7 @@ function Product() {
                 </p>
 
               </div>
-
-            </div>
+            </Link>
           ))}
 
         </div>
