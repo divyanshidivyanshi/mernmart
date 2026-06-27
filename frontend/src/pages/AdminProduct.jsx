@@ -11,11 +11,19 @@ function AdminProducts() {
     description: "",
   });
 
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const fetchProducts = async () => {
-    const res = await axios.get(
-      "http://localhost:5000/api/product/all"
-    );
-    setProducts(res.data.products);
+    try {
+      const res = await axios.get(
+        `${BACKEND_URL}/api/product/all`
+      );
+
+      setProducts(res.data.products);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to load products");
+    }
   };
 
   useEffect(() => {
@@ -23,22 +31,39 @@ function AdminProducts() {
   }, []);
 
   const addProduct = async () => {
-    await axios.post(
-      "http://localhost:5000/api/product/add",
-      form
-    );
+    try {
+      await axios.post(
+        `${BACKEND_URL}/api/product/add`,
+        form
+      );
 
-    toast.success("Product Added");
-    fetchProducts();
+      toast.success("Product Added");
+      setForm({
+        name: "",
+        price: "",
+        image: "",
+        description: "",
+      });
+
+      fetchProducts();
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to add product");
+    }
   };
 
   const deleteProduct = async (id) => {
-    await axios.delete(
-      `http://localhost:5000/api/product/${id}`
-    );
+    try {
+      await axios.delete(
+        `${BACKEND_URL}/api/product/${id}`
+      );
 
-    toast.success("Deleted");
-    fetchProducts();
+      toast.success("Product Deleted");
+      fetchProducts();
+    } catch (error) {
+      console.log(error);
+      toast.error("Delete Failed");
+    }
   };
 
   return (
@@ -47,52 +72,56 @@ function AdminProducts() {
         Admin Products
       </h1>
 
-      {/* ADD PRODUCT */}
       <div className="grid gap-3 mb-6">
         <input
+          value={form.name}
           placeholder="Name"
           className="border p-2"
           onChange={(e) =>
             setForm({ ...form, name: e.target.value })
           }
         />
+
         <input
+          value={form.price}
           placeholder="Price"
           className="border p-2"
           onChange={(e) =>
             setForm({ ...form, price: e.target.value })
           }
         />
+
         <input
+          value={form.image}
           placeholder="Image URL"
           className="border p-2"
           onChange={(e) =>
             setForm({ ...form, image: e.target.value })
           }
         />
+
         <button
           onClick={addProduct}
-          className="bg-orange-500 text-white p-2"
+          className="bg-orange-500 text-white p-2 rounded"
         >
           Add Product
         </button>
       </div>
 
-      {/* PRODUCT LIST */}
       <div className="grid gap-4">
         {products.map((p) => (
           <div
             key={p._id}
-            className="border p-3 flex justify-between"
+            className="border p-3 flex justify-between items-center rounded"
           >
             <div>
-              <h2>{p.name}</h2>
+              <h2 className="font-semibold">{p.name}</h2>
               <p>₹{p.price}</p>
             </div>
 
             <button
               onClick={() => deleteProduct(p._id)}
-              className="bg-red-500 text-white px-3"
+              className="bg-red-500 text-white px-3 py-2 rounded"
             >
               Delete
             </button>

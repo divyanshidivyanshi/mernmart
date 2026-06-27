@@ -6,9 +6,13 @@ import toast from "react-hot-toast";
 function Admin() {
   const [orders, setOrders] = useState([]);
 
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/orders");
+      const res = await axios.post(
+        `${BACKEND_URL}/api/admin/orders`
+      );
 
       if (res.data.success) {
         setOrders(res.data.orders);
@@ -21,14 +25,20 @@ function Admin() {
 
   const updateStatus = async (orderId, status) => {
     try {
-      await axios.put("http://localhost:5000/api/admin/order-status", {
-        orderId,
-        status,
-      });
+      const res = await axios.put(
+        `${BACKEND_URL}/api/admin/order-status`,
+        {
+          orderId,
+          status,
+        }
+      );
 
-      toast.success("Status Updated");
-      fetchOrders();
+      if (res.data.success) {
+        toast.success("Status Updated");
+        fetchOrders();
+      }
     } catch (error) {
+      console.log(error);
       toast.error("Update failed");
     }
   };
@@ -39,7 +49,9 @@ function Admin() {
 
   return (
     <div className="max-w-6xl mx-auto px-5 py-10">
-      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6">
+        Admin Dashboard
+      </h1>
 
       <div className="flex flex-wrap gap-3 mb-6">
         <Link
@@ -48,6 +60,7 @@ function Admin() {
         >
           Orders Panel
         </Link>
+
         <Link
           to="/admin/products"
           className="px-4 py-2 bg-orange-500 text-white rounded"
@@ -56,33 +69,51 @@ function Admin() {
         </Link>
       </div>
 
-      {orders.map((order) => (
-        <div key={order._id} className="border p-5 rounded mb-4">
+      {orders.length === 0 ? (
+        <p>No Orders Found</p>
+      ) : (
+        orders.map((order) => (
+          <div
+            key={order._id}
+            className="border p-5 rounded mb-4"
+          >
+            <p>
+              <b>Order ID:</b> {order._id}
+            </p>
 
-          <p><b>Order ID:</b> {order._id}</p>
-          <p><b>User:</b> {order.userId}</p>
-          <p><b>Amount:</b> ₹{order.amount}</p>
+            <p>
+              <b>User:</b>{" "}
+              {order.userId?.name ||
+                order.userId?.email ||
+                order.userId}
+            </p>
 
-          <p className="mt-2"><b>Status:</b> {order.status}</p>
+            <p>
+              <b>Amount:</b> ₹{order.amount}
+            </p>
 
-          <div className="mt-3 flex gap-2">
-            <select
-              onChange={(e) =>
-                updateStatus(order._id, e.target.value)
-              }
-              value={order.status}
-              className="border p-2"
-            >
-              <option>Order Placed</option>
-              <option>Processing</option>
-              <option>Shipped</option>
-              <option>Delivered</option>
-              <option>Cancelled</option>
-            </select>
+            <p className="mt-2">
+              <b>Status:</b> {order.status}
+            </p>
+
+            <div className="mt-3">
+              <select
+                value={order.status}
+                onChange={(e) =>
+                  updateStatus(order._id, e.target.value)
+                }
+                className="border p-2 rounded"
+              >
+                <option>Order Placed</option>
+                <option>Processing</option>
+                <option>Shipped</option>
+                <option>Delivered</option>
+                <option>Cancelled</option>
+              </select>
+            </div>
           </div>
-
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 }

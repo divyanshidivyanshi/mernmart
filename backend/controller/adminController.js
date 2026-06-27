@@ -3,8 +3,9 @@ import Order from "../models/Order.js";
 // Get all orders (ADMIN)
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().sort({ createdAt: -1 });
-
+   const orders = await Order.find()
+  .populate("userId", "name email")
+  .sort({ createdAt: -1 });
     res.json({
       success: true,
       orders,
